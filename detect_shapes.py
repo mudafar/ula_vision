@@ -2,7 +2,6 @@
 # python detect_shapes.py --image shapes_and_colors.png
 
 # import the necessary packages
-# from pyimagesearch.shapedetector import ShapeDetector
 from pyimagesearch.shapedetect2 import ShapeDetector
 import argparse
 # import imutils
