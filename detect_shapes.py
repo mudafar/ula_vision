@@ -4,7 +4,6 @@
 # import the necessary packages
 from pyimagesearch.shapedetect2 import ShapeDetector
 import argparse
-# import imutils
 import pyimagesearch.convenience as utils
 import cv2
 import numpy as np
