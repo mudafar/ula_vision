@@ -24,7 +24,7 @@ class ShapeDetector:
 
         if len(approx) == 3:
             # cv2.drawContours(dst, [approx], -1, (0, 255, 0), 3)
-            shape = "TRI"
+            shape = "TRIANGULO"
 
         elif (len(approx) >= 4) and (len(approx) <= 6):
             vtc = len(approx)
@@ -42,25 +42,25 @@ class ShapeDetector:
                     x, y, w, h = cv2.boundingRect(approx)
                     ar = w / float(h)
 
-                    shape = "square" if (ar >= 0.95) and (ar <= 1.05) else "rectangle"
+                    shape = "CUADRADO" if (ar >= 0.95) and (ar <= 1.05) else "RECTANGULO"
                 elif mincos >= -0.1 or maxcos <= 0.3:
-                    shape = "rectangle 40%"
+                    shape = "RECTANGULO 40%"
                 #else:
                 #    shape = "rectangle 10%"
 
 
             elif vtc == 5:
                 if mincos >= -0.50 and maxcos <= -0.15:
-                    shape = "PENTA"
+                    shape = "PENTAGONO"
                 elif mincos >= -0.50 or maxcos <= -0.15:
-                    shape = "PENTA 40 %"
+                    shape = "PENTAGONO 40 %"
                 #else:
                 #    shape = "PENTA 10%"
             elif vtc == 6:
                 if mincos >= -0.55 and maxcos <= -0.45:
-                    shape = "HEXA"
+                    shape = "HEXAGONO"
                 if mincos >= -0.55 or maxcos <= -0.45:
-                    shape = "HEXA 40 %"
+                    shape = "HEXAGONO 40 %"
                 #else:
                 #    shape = "HEXA 10%"
 
@@ -71,11 +71,11 @@ class ShapeDetector:
             radius = w / 2
 
             if abs(1 - (float(w) / h)) <= 0.2 and abs(1 - (area / (np.pi * pow(radius, 2)))) <= 0.2:
-                shape = "CIR"
+                shape = "CIRCULO"
             elif abs(1 - (float(w) / h)) <= 0.2 or abs(1 - (area / (np.pi * pow(radius, 2)))) <= 0.2:
-                shape = "CIR 40%"
+                shape = "CIRCULO 40%"
             else:
-                shape = "CIR 20%"
+                shape = "CIRCULO 20%"
                 # cv2.drawContours(dst, approx, -1, (0, 255, 0), 3)
         # print 'length approx: ', len(approx)
         return shape

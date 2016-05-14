@@ -15,9 +15,9 @@ def changeCannyMin(x):
     cannyMin = x
     cannyMax = x + 50
     #thresh = cv2.Canny(gray, cannyMin, cannyMax)
-    cv2.setTrackbarMin('Canny Thresh Max', 'ULA VISION 2016', cannyMin + 1)
+    cv2.setTrackbarMin('Umbral Maximo', 'ULA VISION 2016', cannyMin + 1)
     #cv2.setTrackbarMax('Canny Thresh Max', 'ULA VISION 2016', cannyMax)
-    cv2.setTrackbarPos('Canny Thresh Max', 'ULA VISION 2016', cannyMax)
+    cv2.setTrackbarPos('Umbral Maximo', 'ULA VISION 2016', cannyMax)
     #thresh = cv2.threshold(blurred, cannyMin, cannyMax, cv2.THRESH_BINARY)[1]
     #cv2.imshow('ULA VISION 2016', thresh)
     process_image()
@@ -131,11 +131,11 @@ cannyMin = 0
 cannyMax = 50
 image = blank_image = np.zeros((400, 600, 3), np.uint8)
 cv2.namedWindow('ULA VISION 2016')
-cv2.createTrackbar('Canny Thresh Min', 'ULA VISION 2016', 0, 400, changeCannyMin)
-cv2.createTrackbar('Canny Thresh Max', 'ULA VISION 2016', 0, 450, changeCannyMax)
+cv2.createTrackbar('Umbral Minimo', 'ULA VISION 2016', 0, 400, changeCannyMin)
+cv2.createTrackbar('Umbral Maximo', 'ULA VISION 2016', 0, 450, changeCannyMax)
 cv2.setMouseCallback('ULA VISION 2016', startApp)
 
-cv2.setTrackbarPos('Canny Thresh Max', 'ULA VISION 2016', cannyMax)
+cv2.setTrackbarPos('Umbral Maximo', 'ULA VISION 2016', cannyMax)
 
 #cv2.createTrackbar('Blur Thresh', 'ULA VISION 2016', 0, 120, changeBlur)
 #cv2.createTrackbar('Blur Size', 'ULA VISION 2016', 0, 20, changeBlurSize)
