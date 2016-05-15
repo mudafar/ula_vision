@@ -48,7 +48,6 @@ def changeBlurSize(x):
 
 
 def startApp(event, x, y, flag, data):
-
     #if flag == cv2.EVENT_FLAG_LBUTTON:
     if event == cv2.EVENT_LBUTTONDOWN:
         #global image, thresh
@@ -87,16 +86,37 @@ def startApp(event, x, y, flag, data):
                 #print 'ignored'
                 #cv2.drawContours(image2, [c], -1, (0, 255, 0), 2)
 
-            if shape != '-':
+            if shape != '-' and shape != '':
                 cv2.drawContours(image2, [c], -1, (0, 255, 0), 2)
                 utils.setLabel(image2, shape, c)
             # cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+
+            # activate training logic
+            if training:
+                if shape != '-' and shape != '':
+                    #image3 = image2.copy()
+                    BLUE = [255, 0, 0]
+                    image3 = cv2.copyMakeBorder(image2, 6, 30, 6, 6, cv2.BORDER_CONSTANT, value=BLUE)
+
+                    utils.setLabelUnder(image3, 'Evaluae el resultado | Presione b para Bien | m para Mal')
+                    cv2.imshow("ULA VISION 2016", image3)
+                    key = cv2.waitKey(0) & 0xFF
+                    if key == ord("b"):
+                        # more precise, prase type
+                        utils.parase_figure(shape, True)
+                    elif key == ord("m"):
+                        utils.parase_figure(shape, False)
+
+                    sd.update_data(utils.load_json_dic())
+                    #elif key == ord("m"):
+                        # less precision
+
 
             # show the output image
             cv2.imshow("ULA VISION 2016", image2)
             # exit when e it is pressed, others to continue detecting
             print '*',
-            sys.stdout.flush()
+            #sys.stdout.flush()
         print 'analysis finished'
         cv2.waitKey(0)
 
@@ -121,14 +141,24 @@ def process_image():
     cv2.imshow("ULA VISION 2016", thresh)
 
 
+training = False
+
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser(description='Ula Vision')
 ap.add_argument("-i", "--image", required=False, help="path to the input image")
+ap.add_argument("-t", "--training", required=False, help="true to activate training mode")
 #args = vars(ap.parse_args())
 args, leftover = ap.parse_known_args()
 
 cannyMin = 0
 cannyMax = 50
+
+# todo load canny values from json file
+cannyMax = utils.load_from_json("cannyMax")
+cannyMin = utils.load_from_json("cannyMin")
+
+#print cannyMax
+
 image = blank_image = np.zeros((400, 600, 3), np.uint8)
 cv2.namedWindow('ULA VISION 2016')
 cv2.createTrackbar('Umbral Minimo', 'ULA VISION 2016', 0, 400, changeCannyMin)
@@ -142,8 +172,13 @@ cv2.setTrackbarPos('Umbral Maximo', 'ULA VISION 2016', cannyMax)
 
 # image proveded via command line, use it
 if args.image is not None:
+    if args.training is not None:
+        training = True
+        if args.training == "init":
+            utils.init_dic()
+
     image = cv2.imread(args.image)
-    cannyMin, cannyMax, edge = utils.auto_canny(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY))
+    #cannyMin, cannyMax, edge = utils.auto_canny(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY))
     process_image()
     cv2.waitKey(0)
 else:
@@ -157,5 +192,9 @@ else:
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap.release()
+
+# update canny values into json
+utils.update_into_json("cannyMax", cannyMax)
+utils.update_into_json("cannyMin", cannyMin)
 
 cv2.destroyAllWindows()

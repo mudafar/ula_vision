@@ -5,6 +5,122 @@
 import numpy as np
 import cv2
 import sys
+import json
+
+def load_json_dic():
+    return json.load(open("db.json", "r"))
+
+def dump_json_dic(dic):
+    json.dump(dic, open("db.json", "wb"))
+
+
+def init_dic():
+    dic = {"cannyMin": 0, "cannyMax": 50,
+           "contourArea": 100, "isContourConvex": 1, "4_minarcos": -0.1, "4_maxarcos": 0.3,
+           "5_minarcos": -0.50, "5_maxarcos": -0.1,
+           "6_minarcos": -0.62, "6_maxarcos": -0.4,
+           "rect_p": 50, "pent_p": 50, "hex_p": 50, "cir_p": 50,
+           "w_h_relation": 0.2, "area_relation": 0.2
+           }
+    json.dump(dic, open("db.json", "wb"))
+
+    #das = json.load(open("db.json", "r"))
+    #print das['contourArea']
+
+def load_from_json(key):
+    das = json.load(open("db.json", "r"))
+    return das[key]
+
+def update_into_json(key, new_value):
+    dic = load_json_dic()
+    dic[key] = new_value
+    dump_json_dic(dic)
+
+def has_percentage(str):
+    if '%' in str:
+        return True
+    else:
+        return False
+
+
+def parase_figure(str, good):
+    dic = load_json_dic()
+
+    per = has_percentage(str)
+    if "RECTANGULO" in str:
+        if good:
+            dic["4_minarcos"] -= 0.02
+            dic["4_maxarcos"] += 0.02
+            if per:
+                dic["rect_p"] += 5
+                if dic["rect_p"] > 100:
+                    dic["rect_p"] = 100
+
+        else:
+            dic["4_minarcos"] += 0.02
+            dic["4_maxarcos"] -= 0.02
+            if per:
+                dic["rect_p"] -= 5
+                if dic["rect_p"] < 10:
+                    dic["rect_p"] = 10
+
+
+    elif "PENTAGONO" in str:
+        if good:
+            dic["5_minarcos"] -= 0.02
+            dic["5_maxarcos"] += 0.02
+            if per:
+                dic["pent_p"] += 5
+                if dic["pent_p"] > 100:
+                    dic["pent_p"] = 100
+
+        else:
+            dic["5_minarcos"] += 0.02
+            dic["5_maxarcos"] -= 0.02
+            if per:
+                dic["pent_p"] -= 5
+                if dic["pent_p"] < 10:
+                    dic["pent_p"] = 10
+
+
+    elif "HEXAGONO" in str:
+        if good:
+            dic["6_minarcos"] -= 0.02
+            dic["6_maxarcos"] += 0.02
+            if per:
+                dic["hex_p"] += 5
+                if dic["hex_p"] > 100:
+                    dic["hex_p"] = 100
+
+        else:
+            dic["6_minarcos"] += 0.02
+            dic["6_maxarcos"] -= 0.02
+
+            if per:
+                dic["pent_p"] -= 5
+                if dic["hex_p"] < 10:
+                    dic["hex_p"] = 10
+
+    elif "CIRCULO" in str:
+        if good:
+            dic["area_relation"] += 0.02
+            dic["w_h_relation"] += 0.02
+            if per:
+                dic["cir_p"] += 5
+                if dic["cir_p"] > 100:
+                    dic["cir_p"] = 100
+
+        else:
+            dic["area_relation"] -= 0.02
+            dic["w_h_relation"] -= 0.02
+            if per:
+                dic["cir_p"] -= 5
+                if dic["cir_p"] < 10:
+                    dic["cir_p"] = 10
+
+
+    dump_json_dic(dic)
+
 
 
 def setLabel(im, label, contour):
@@ -20,6 +136,23 @@ def setLabel(im, label, contour):
     pt = (x + ((w - sz[0]) / 2), y + ((h + sz[1]) / 2))
     im = cv2.rectangle(im, (pt[0], pt[1] + baseline), (pt[0] + sz[0], pt[1] - sz[1]), (255, 255, 255), cv2.FILLED)
     cv2.putText(im, label, pt, fontface, scale, (0, 0, 0), thickness, 8)
+
+
+def setLabelUnder(im, label):
+
+    fontface = cv2.FONT_HERSHEY_SIMPLEX
+    scale = 0.4
+    thickness = 1
+    # baseline = 0
+
+    sz, baseline = cv2.getTextSize(label, fontface, scale, thickness)
+
+    height, width, channels = im.shape
+
+    pt = ((width - sz[0]) / 2, (height - sz[1]) )
+    im = cv2.rectangle(im, (pt[0], pt[1] + baseline), (pt[0] + sz[0], pt[1] - sz[1]), (255, 255, 255), cv2.FILLED)
+    cv2.putText(im, label, pt, fontface, scale, (0, 0, 0), thickness, 8)
+
 
 
 def angle(pt1, pt2, pt0):

@@ -1,83 +1,105 @@
 # import the necessary packages
 import cv2
 import numpy as np
-from pyimagesearch.convenience import angle, cleanVertex
+import pyimagesearch.convenience as utils
 
 
 class ShapeDetector:
     def __init__(self):
-        pass
+        # todo read data from json file and load it
+        self.dic = utils.load_json_dic()
+        #pass
+
+    def update_data(self, data):
+        self.dic = data
 
     def detect(self, c):
         shape = '?'
 
         peri = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, peri * 0.04, True)
-
+        edges = len(approx)
 
         # cleanVertex(approx)
 
-        if (np.fabs(cv2.contourArea(c)) < 100) or (not cv2.isContourConvex(approx)):
+        if np.fabs(cv2.contourArea(c)) < 100:
             return '-'
+        elif not cv2.isContourConvex(approx):
+            return ''
 
         #print len(approx)
 
-        if len(approx) == 3:
+        if edges == 3:
             # cv2.drawContours(dst, [approx], -1, (0, 255, 0), 3)
             shape = "TRIANGULO"
 
-        elif (len(approx) >= 4) and (len(approx) <= 6):
-            vtc = len(approx)
-            cos = []
-            for j in range(2, vtc + 1, 1):
-                # print j % vtc, 'module '
-                cos.append(angle(approx[j % vtc], approx[j - 2], approx[j - 1]))
+        elif (edges >= 4) and (edges <= 6):
+            vtc = edges
+            arcos = []
 
-            cos.sort()
-            mincos = cos[0]
-            maxcos = cos[-1]
+            if edges <= 6:
+                for j in range(2, vtc + 1, 1):
+                    # print j % vtc, 'module '
+                    arcos.append(utils.angle(approx[j % vtc], approx[j - 2], approx[j - 1]))
+
+            arcos.sort()
+            minarcos = arcos[0]
+            maxarcos = arcos[-1]
 
             if vtc == 4:
-                if mincos >= -0.1 and maxcos <= 0.3:
+                #           <= 95.7              >= 72.5
+                #if minarcos >= -0.1 and maxarcos <= 0.3:
+                if minarcos >= self.dic["4_minarcos"] and maxarcos <= self.dic["4_maxarcos"]:
                     x, y, w, h = cv2.boundingRect(approx)
                     ar = w / float(h)
 
                     shape = "CUADRADO" if (ar >= 0.95) and (ar <= 1.05) else "RECTANGULO"
-                elif mincos >= -0.1 or maxcos <= 0.3:
-                    shape = "RECTANGULO 40%"
+                elif minarcos >= self.dic["4_minarcos"] or maxarcos <= self.dic["4_maxarcos"]:
+                    shape = "RECTANGULO " + str(self.dic["rect_p"]) + "%"
                 #else:
                 #    shape = "rectangle 10%"
 
 
             elif vtc == 5:
-                if mincos >= -0.50 and maxcos <= -0.15:
+                #           <= 120                >= 95.7
+                #if minarcos >= -0.50 and maxarcos <= -0.1:
+                if minarcos >= self.dic["5_minarcos"] and maxarcos <= self.dic["5_maxarcos"]:
+
                     shape = "PENTAGONO"
-                elif mincos >= -0.50 or maxcos <= -0.15:
-                    shape = "PENTAGONO 40 %"
+                elif minarcos >= self.dic["5_minarcos"] or maxarcos <= self.dic["5_maxarcos"]:
+                    shape = "PENTAGONO " + str(self.dic["pent_p"]) + "%"
                 #else:
                 #    shape = "PENTA 10%"
             elif vtc == 6:
-                if mincos >= -0.55 and maxcos <= -0.45:
+                #print ('mincos: ', minarcos ,'maxcos: ', maxarcos)
+                #           <= 128.3              >= 113.5
+                #if minarcos >= -0.62 and maxarcos <= -0.4:
+                if minarcos >= self.dic["6_minarcos"] and maxarcos <= self.dic["6_maxarcos"]:
+
                     shape = "HEXAGONO"
-                if mincos >= -0.55 or maxcos <= -0.45:
-                    shape = "HEXAGONO 40 %"
+                elif minarcos >= self.dic["6_minarcos"] or maxarcos <= self.dic["6_maxarcos"]:
+                    shape = "HEXAGONO " + str(self.dic["hex_p"]) + "%"
                 #else:
                 #    shape = "HEXA 10%"
 
-        if (len(approx) >= 4) and (shape == '?'):
+        if (edges >= 4) and (shape == '?'):
             area = cv2.contourArea(c)
             x, y, w, h = cv2.boundingRect(c)
             radius = int
             radius = w / 2
 
-            if abs(1 - (float(w) / h)) <= 0.2 and abs(1 - (area / (np.pi * pow(radius, 2)))) <= 0.2:
+            w_h_relation = abs(1 - (float(w) / h))
+            area_relation = abs(1 - (area / (np.pi * pow(radius, 2))))
+
+
+            if w_h_relation <= self.dic["w_h_relation"] and area_relation <= self.dic["area_relation"]:
                 shape = "CIRCULO"
-            elif abs(1 - (float(w) / h)) <= 0.2 or abs(1 - (area / (np.pi * pow(radius, 2)))) <= 0.2:
-                shape = "CIRCULO 40%"
+            elif w_h_relation <= self.dic["w_h_relation"] or area_relation <= self.dic["area_relation"]:
+                    shape = "CIRCULO " + str(self.dic["cir_p"]) + "%"
             else:
-                shape = "CIRCULO 20%"
+                shape = "CIRCULO 20 %"
                 # cv2.drawContours(dst, approx, -1, (0, 255, 0), 3)
-        # print 'length approx: ', len(approx)
+        # print 'length approx: ', edges
         return shape
 
 
