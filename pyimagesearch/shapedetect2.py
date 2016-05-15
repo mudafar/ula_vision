@@ -6,7 +6,7 @@ import pyimagesearch.convenience as utils
 
 class ShapeDetector:
     def __init__(self):
-        # todo read data from json file and load it
+        # read data from json file and load it
         self.dic = utils.load_json_dic()
         #pass
 
