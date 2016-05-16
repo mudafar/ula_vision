@@ -96,9 +96,9 @@ def startApp(event, x, y, flag, data):
                 if shape != '-' and shape != '':
                     #image3 = image2.copy()
                     BLUE = [255, 0, 0]
-                    image3 = cv2.copyMakeBorder(image2, 6, 30, 6, 6, cv2.BORDER_CONSTANT, value=BLUE)
+                    image3 = cv2.copyMakeBorder(image2, 20, 30, 15, 20, cv2.BORDER_CONSTANT, value=BLUE)
 
-                    utils.setLabelUnder(image3, 'Evaluae el resultado | Presione b para Bien | m para Mal')
+                    utils.setLabelUnder(image3, 'Evaluae | Presione b para Bien | m para Mal')
                     cv2.imshow("ULA VISION 2016", image3)
                     key = cv2.waitKey(0) & 0xFF
                     if key == ord("b"):

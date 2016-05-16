@@ -53,69 +53,69 @@ def parase_figure(str, good):
             dic["4_minarcos"] -= random.uniform(0.01, 0.03)
             dic["4_maxarcos"] += random.uniform(0.01, 0.03)
             if per:
-                dic["rect_p"] += 5
+                dic["rect_p"] += int(random.uniform(3, 10))
                 if dic["rect_p"] > 100:
                     dic["rect_p"] = 100
 
         else:
-            dic["4_minarcos"] += 0.02
-            dic["4_maxarcos"] -= 0.02
+            dic["4_minarcos"] += random.uniform(0.01, 0.03)
+            dic["4_maxarcos"] -= random.uniform(0.01, 0.03)
             if per:
-                dic["rect_p"] -= 5
+                dic["rect_p"] -= int(random.uniform(3, 10))
                 if dic["rect_p"] < 10:
                     dic["rect_p"] = 10
 
 
     elif "PENTAGONO" in str:
         if good:
-            dic["5_minarcos"] -= 0.02
-            dic["5_maxarcos"] += 0.02
+            dic["5_minarcos"] -= random.uniform(0.01, 0.03)
+            dic["5_maxarcos"] += random.uniform(0.01, 0.03)
             if per:
-                dic["pent_p"] += 5
+                dic["pent_p"] += int(random.uniform(3, 10))
                 if dic["pent_p"] > 100:
                     dic["pent_p"] = 100
 
         else:
-            dic["5_minarcos"] += 0.02
-            dic["5_maxarcos"] -= 0.02
+            dic["5_minarcos"] += random.uniform(0.01, 0.03)
+            dic["5_maxarcos"] -= random.uniform(0.01, 0.03)
             if per:
-                dic["pent_p"] -= 5
+                dic["pent_p"] -= int(random.uniform(3, 10))
                 if dic["pent_p"] < 10:
                     dic["pent_p"] = 10
 
 
     elif "HEXAGONO" in str:
         if good:
-            dic["6_minarcos"] -= 0.02
-            dic["6_maxarcos"] += 0.02
+            dic["6_minarcos"] -= random.uniform(0.01, 0.03)
+            dic["6_maxarcos"] += random.uniform(0.01, 0.03)
             if per:
-                dic["hex_p"] += 5
+                dic["hex_p"] += int(random.uniform(3, 10))
                 if dic["hex_p"] > 100:
                     dic["hex_p"] = 100
 
         else:
-            dic["6_minarcos"] += 0.02
-            dic["6_maxarcos"] -= 0.02
+            dic["6_minarcos"] += random.uniform(0.01, 0.03)
+            dic["6_maxarcos"] -= random.uniform(0.01, 0.03)
 
             if per:
-                dic["pent_p"] -= 5
+                dic["pent_p"] -= int(random.uniform(3, 10))
                 if dic["hex_p"] < 10:
                     dic["hex_p"] = 10
 
     elif "CIRCULO" in str:
         if good:
-            dic["area_relation"] += 0.02
-            dic["w_h_relation"] += 0.02
+            dic["area_relation"] += random.uniform(0.01, 0.03)
+            dic["w_h_relation"] += random.uniform(0.01, 0.03)
             if per:
-                dic["cir_p"] += 5
+                dic["cir_p"] += int(random.uniform(3, 10))
                 if dic["cir_p"] > 100:
                     dic["cir_p"] = 100
 
         else:
-            dic["area_relation"] -= 0.02
-            dic["w_h_relation"] -= 0.02
+            dic["area_relation"] -= random.uniform(0.01, 0.03)
+            dic["w_h_relation"] -= random.uniform(0.01, 0.03)
             if per:
-                dic["cir_p"] -= 5
+                dic["cir_p"] -= int(random.uniform(3, 10))
                 if dic["cir_p"] < 10:
                     dic["cir_p"] = 10
 
