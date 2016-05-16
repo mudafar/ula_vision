@@ -6,6 +6,7 @@ import numpy as np
 import cv2
 import sys
 import json
+import random
 
 def load_json_dic():
     return json.load(open("db.json", "r"))
@@ -49,8 +50,8 @@ def parase_figure(str, good):
     per = has_percentage(str)
     if "RECTANGULO" in str:
         if good:
-            dic["4_minarcos"] -= 0.02
-            dic["4_maxarcos"] += 0.02
+            dic["4_minarcos"] -= random.uniform(0.01, 0.03)
+            dic["4_maxarcos"] += random.uniform(0.01, 0.03)
             if per:
                 dic["rect_p"] += 5
                 if dic["rect_p"] > 100:
